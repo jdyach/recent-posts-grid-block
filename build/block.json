@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "jdyach/recent-posts-grid",
+  "version": "1.0.0",
+  "title": "Recent Posts Grid",
+  "category": "widgets",
+  "icon": "grid-view",
+  "description": "Display a responsive grid of your most recent posts, with controls for post count, category, columns, and which post meta to show.",
+  "keywords": [
+    "posts",
+    "grid",
+    "recent",
+    "blog",
+    "archive"
+  ],
+  "textdomain": "recent-posts-grid-block",
+  "attributes": {
+    "postsToShow": {
+      "type": "number",
+      "default": 6
+    },
+    "columns": {
+      "type": "number",
+      "default": 3
+    },
+    "categoryId": {
+      "type": "number",
+      "default": 0
+    },
+    "order": {
+      "type": "string",
+      "default": "desc"
+    },
+    "displayFeaturedImage": {
+      "type": "boolean",
+      "default": true
+    },
+    "displayExcerpt": {
+      "type": "boolean",
+      "default": true
+    },
+    "excerptLength": {
+      "type": "number",
+      "default": 20
+    },
+    "displayDate": {
+      "type": "boolean",
+      "default": true
+    },
+    "displayAuthor": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "color": {
+      "background": true,
+      "text": true,
+      "link": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
+}
