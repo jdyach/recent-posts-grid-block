@@ -30,6 +30,10 @@
 	&__thumbnail {
 		display: block;
 		width: 100%;
+		// WordPress prints width/height attributes on the <img>. Without
+		// height: auto they override aspect-ratio and images keep their
+		// natural shape (block themes don't reset this globally).
+		height: auto;
 		aspect-ratio: 16 / 10;
 		object-fit: cover;
 	}

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ruleset name="Recent Posts Grid Block">
+	<description>WordPress Coding Standards for the Recent Posts Grid Block plugin.</description>
+
+	<file>.</file>
+	<exclude-pattern>/build/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="6.5"/>
+
+	<rule ref="WordPress">
+		<!-- Template-style files mix markup and PHP. -->
+		<exclude name="Squiz.PHP.EmbeddedPhp"/>
+		<exclude name="Generic.WhiteSpace.ScopeIndent"/>
+		<!-- render.php and the demo seed have names set by WordPress conventions. -->
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="recent-posts-grid-block"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="rpgb"/>
+			</property>
+		</properties>
+		<!-- render.php runs inside WP_Block::render(), so its variables are local, not global. -->
+		<exclude-pattern>*/render.php</exclude-pattern>
+		<exclude-pattern>/_playground/*</exclude-pattern>
+	</rule>
+
+	<!-- Same reason: $order in render.php is a local variable, not WordPress's global. -->
+	<rule ref="WordPress.WP.GlobalVariablesOverride">
+		<exclude-pattern>*/render.php</exclude-pattern>
+	</rule>
+</ruleset>

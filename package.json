@@ -11,7 +11,8 @@
 		"lint:js": "wp-scripts lint-js",
 		"lint:css": "wp-scripts lint-style",
 		"format": "wp-scripts format",
-		"plugin-zip": "wp-scripts plugin-zip"
+		"plugin-zip": "wp-scripts plugin-zip",
+		"blueprint": "node bin/build-blueprint.js"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.0.0"

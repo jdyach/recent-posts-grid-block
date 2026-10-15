@@ -1,0 +1,48 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Recent Posts Grid Block demo",
+		"description": "A dynamic Gutenberg block: responsive grid of recent posts with editor controls and a live server-rendered preview.",
+		"author": "jdyach",
+		"categories": [
+			"Block"
+		]
+	},
+	"landingPage": "/wp-admin/post.php?post=100&action=edit",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installTheme",
+			"themeData": {
+				"resource": "git:directory",
+				"url": "https://github.com/jdyach/fieldnote",
+				"ref": "main"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "git:directory",
+				"url": "https://github.com/jdyach/recent-posts-grid-block",
+				"ref": "main"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\n/**\n * Demo content for the WordPress Playground \"Try it live\" link.\n *\n * Runs once inside Playground (blueprint.json embeds this file). Creates\n * categorized posts with featured images and a page showing the block in three\n * configurations, then opens that page in the block editor so the sidebar\n * controls and live server-rendered preview are visible straight away.\n *\n * Not loaded by the plugin.\n *\n * @package RecentPostsGridBlock\n */\n\n// phpcs:disable WordPress.WP.GlobalVariablesOverride -- Standalone demo script that Playground runs once in global scope.\n\nrequire_once '/wordpress/wp-load.php';\nrequire_once ABSPATH . 'wp-admin/includes/image.php';\nrequire_once ABSPATH . 'wp-admin/includes/taxonomy.php';\n\nwp_set_current_user( 1 );\n\nforeach ( get_posts(\n\tarray(\n\t\t'post_type'   => array( 'post', 'page' ),\n\t\t'numberposts' => -1,\n\t\t'post_status' => 'any',\n\t)\n) as $old ) {\n\twp_delete_post( $old->ID, true );\n}\n\n// Featured images: reuse the Fieldnote theme's original artwork when it is active.\n$images = array();\nforeach ( array( 'studio-shapes', 'field-study', 'notebook' ) as $name ) {\n\t$source = get_theme_file_path( \"assets/images/$name.webp\" );\n\tif ( ! file_exists( $source ) ) {\n\t\tcontinue;\n\t}\n\t$upload = wp_upload_bits( \"$name.webp\", null, file_get_contents( $source ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents\n\tif ( ! empty( $upload['error'] ) ) {\n\t\tcontinue;\n\t}\n\t$id = wp_insert_attachment(\n\t\tarray(\n\t\t\t'post_mime_type' => 'image/webp',\n\t\t\t'post_title'     => $name,\n\t\t\t'post_status'    => 'inherit',\n\t\t),\n\t\t$upload['file']\n\t);\n\twp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );\n\t$images[] = $id;\n}\n\n$categories = array(\n\twp_create_category( 'Process' ),\n\twp_create_category( 'Block themes' ),\n\twp_create_category( 'Notes' ),\n);\n\n$titles = array(\n\t'Why we moved every client to block themes',\n\t'A fluid type scale you can actually reason about',\n\t'Section styles: color schemes without custom CSS',\n\t'Writing patterns editors will not break',\n\t'What theme.json replaced in our old functions.php',\n\t'Notes on handing off a site to a non-developer',\n\t'Designing for the person who edits the site next',\n\t'Patterns, not page builders',\n\t'A checklist for accessible color schemes',\n);\n\nforeach ( $titles as $i => $title ) {\n\t$post_id = wp_insert_post(\n\t\tarray(\n\t\t\t'post_title'    => $title,\n\t\t\t'post_content'  => '<!-- wp:paragraph --><p>Sample post for the Recent Posts Grid demo.</p><!-- /wp:paragraph -->',\n\t\t\t'post_excerpt'  => 'A short write-up from the studio on building maintainable WordPress sites with blocks, presets and patterns.',\n\t\t\t'post_status'   => 'publish',\n\t\t\t'post_date'     => gmdate( 'Y-m-d H:i:s', time() - ( $i + 1 ) * 4 * DAY_IN_SECONDS ),\n\t\t\t'post_category' => array( $categories[ $i % 3 ] ),\n\t\t)\n\t);\n\tif ( $images ) {\n\t\tset_post_thumbnail( $post_id, $images[ $i % count( $images ) ] );\n\t}\n}\n\n$process = (int) $categories[0];\n\n$content = '<!-- wp:paragraph {\"fontSize\":\"large\"} --><p class=\"has-large-font-size\">Three copies of the same block with different settings. Click any grid to see its controls in the sidebar; the preview is rendered by the same PHP as the front end.</p><!-- /wp:paragraph -->\n\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Default: six posts, three columns</h2><!-- /wp:heading -->\n\n<!-- wp:jdyach/recent-posts-grid {\"align\":\"wide\"} /-->\n\n<!-- wp:heading --><h2 class=\"wp-block-heading\">One category, two columns, with author</h2><!-- /wp:heading -->\n\n<!-- wp:jdyach/recent-posts-grid {\"postsToShow\":2,\"columns\":2,\"categoryId\":' . $process . ',\"displayAuthor\":true,\"excerptLength\":12,\"align\":\"wide\"} /-->\n\n<!-- wp:heading --><h2 class=\"wp-block-heading\">Oldest first, text only</h2><!-- /wp:heading -->\n\n<!-- wp:jdyach/recent-posts-grid {\"postsToShow\":3,\"order\":\"asc\",\"displayFeaturedImage\":false,\"align\":\"wide\"} /-->';\n\nwp_insert_post(\n\tarray(\n\t\t'import_id'    => 100, // Fixed ID so the blueprint can open this page in the editor.\n\t\t'post_title'   => 'Recent Posts Grid',\n\t\t'post_type'    => 'page',\n\t\t'post_status'  => 'publish',\n\t\t'post_content' => $content,\n\t)\n);\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', 100 );\nupdate_option( 'blogname', 'Recent Posts Grid Block' );\nupdate_option( 'blogdescription', 'Live demo' );\nupdate_option( 'permalink_structure', '/%postname%/' );\nflush_rewrite_rules();\n\n// Skip the editor's welcome guide so visitors land straight on the blocks.\nupdate_user_meta(\n\t1,\n\t$GLOBALS['wpdb']->get_blog_prefix() . 'persisted_preferences',\n\tarray(\n\t\t'core/edit-post' => array( 'welcomeGuide' => false ),\n\t\t'core'           => array( 'welcomeGuide' => false ),\n\t\t'_modified'      => gmdate( 'c' ),\n\t)\n);\n"
+		}
+	]
+}

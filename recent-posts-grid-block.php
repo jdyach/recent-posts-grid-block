@@ -3,7 +3,7 @@
  * Plugin Name:       Recent Posts Grid Block
  * Plugin URI:        https://github.com/jdyach/recent-posts-grid-block
  * Description:       A custom Gutenberg block that renders a responsive, configurable grid of your most recent posts. Built as a small demonstration of custom block development (block.json, InspectorControls, ServerSideRender, dynamic PHP rendering).
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Jacqui
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'RPGB_VERSION', '1.0.0' );
+define( 'RPGB_VERSION', '1.0.1' );
 define( 'RPGB_PLUGIN_FILE', __FILE__ );
 define( 'RPGB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 

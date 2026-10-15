@@ -2,6 +2,10 @@
 
 A small custom WordPress plugin built to demonstrate a complete, current block-development workflow: `block.json`-driven registration, a dynamic (server-rendered) block, a real editor experience backed by live PHP preview, and the `@wordpress/scripts` build toolchain.
 
+[![Try it live in WordPress Playground](https://img.shields.io/badge/Try%20it%20live-WordPress%20Playground-3858e9?logo=wordpress&logoColor=white&style=for-the-badge)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/jdyach/recent-posts-grid-block/main/_playground/blueprint.json)
+
+The live demo runs a real WordPress site in your browser (with the [Fieldnote](https://github.com/jdyach/fieldnote) block theme and sample content) and opens straight into the block editor, so you can click any grid and try the sidebar controls. Nothing to install.
+
 It adds one block, **Recent Posts Grid**, that renders a responsive grid of the site's most recent posts, with editor controls for how many to show, which category, sort order, column count, and which fields (thumbnail, excerpt, date, author) to display.
 
 ## Why this exists
@@ -28,7 +32,9 @@ recent-posts-grid-block/
 │   ├── editor.scss                # Editor-only styles
 │   └── style.scss                # Front-end + editor styles
 ├── build/                        # Compiled output (checked in so the plugin runs as-is)
-├── .github/workflows/ci.yml      # Build + PHP lint on every push
+├── .github/workflows/ci.yml      # Build, CSS lint, coding standards + PHP lint on every push
+├── _playground/                  # WordPress Playground demo: blueprint.json + seed.php
+├── bin/build-blueprint.js        # Rebuilds blueprint.json from seed.php (npm run blueprint)
 ├── .phpcs.xml.dist               # WordPress Coding Standards config
 └── readme.txt                    # WordPress.org-style plugin readme
 ```
