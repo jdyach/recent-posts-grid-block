@@ -2,7 +2,7 @@
 	"name": "recent-posts-grid-block",
 	"version": "1.0.0",
 	"description": "A custom Gutenberg block that renders a responsive grid of recent posts, with editor controls for post count, category, columns, and display options.",
-	"author": "Jacqui",
+	"author": "Jacqui Dyach",
 	"license": "GPL-2.0-or-later",
 	"private": true,
 	"scripts": {
